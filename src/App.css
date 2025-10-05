@@ -216,3 +216,7 @@ input[type="checkbox"] {
     transform: translateY(0);
   }
 }
+.line-through {
+  text-decoration: line-through  rgb(255, 59, 59);
+  text-decoration-thickness: 2px;
+}
