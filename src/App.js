@@ -2,10 +2,7 @@ import React, { useState } from "react";
 import "./App.css";
 
 export default function App() {
-  const [data, setData] = useState([
-    { id: 1, count: 1, itemName: "passport", packed: false },
-    { id: 2, count: 2, itemName: "book", packed: true },
-  ]);
+  const [data, setData] = useState([]);
   const onToggleItem = function (id) {
     setData((prevData) =>
       prevData.map((item) =>
@@ -16,11 +13,18 @@ export default function App() {
   const onAddItem = function (newItem) {
     setData((prevData) => [...prevData, newItem]);
   };
+  const onDeleteItem = function (id) {
+    setData((prevData) => prevData.filter((item) => item.id !== id));
+  };
   return (
     <div className="app">
       <Logo />
       <Form onAddItem={onAddItem} />
-      <PackingList data={data} onToggleItem={onToggleItem} />
+      <PackingList
+        data={data}
+        onToggleItem={onToggleItem}
+        onDeleteItem={onDeleteItem}
+      />
       <Stats />
     </div>
   );
@@ -37,7 +41,7 @@ function Form({ onAddItem }) {
     e.preventDefault();
     if (!description) return;
     const newItem = {
-      id: new Date(),
+      id: Date.now() + Math.random(),
       count: quantity,
       itemName: description,
       packed: false,
@@ -69,7 +73,7 @@ function Form({ onAddItem }) {
   );
 }
 
-function PackingList({ data, onToggleItem }) {
+function PackingList({ data, onToggleItem, onDeleteItem }) {
   return (
     <div className="packing-list">
       <ul className="list">
@@ -81,6 +85,7 @@ function PackingList({ data, onToggleItem }) {
             item={item.itemName}
             packed={item.packed}
             onToggleItem={onToggleItem}
+            onDeleteItem={onDeleteItem}
           />
         ))}
       </ul>
@@ -95,7 +100,7 @@ function Stats() {
     </footer>
   );
 }
-function Item({ item, count, packed, onToggleItem, id }) {
+function Item({ item, count, packed, onToggleItem, id, onDeleteItem }) {
   return (
     <li>
       <input
@@ -106,7 +111,7 @@ function Item({ item, count, packed, onToggleItem, id }) {
       <span className={packed === true ? "line-through" : ""}>
         {count} -{item}
       </span>
-      <button>❌</button>
+      <button onClick={() => onDeleteItem(id)}>❌</button>
     </li>
   );
 }
