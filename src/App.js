@@ -13,10 +13,13 @@ export default function App() {
       )
     );
   };
+  const onAddItem = function (newItem) {
+    setData((prevData) => [...prevData, newItem]);
+  };
   return (
     <div className="app">
       <Logo />
-      <Form />
+      <Form onAddItem={onAddItem} />
       <PackingList data={data} onToggleItem={onToggleItem} />
       <Stats />
     </div>
@@ -26,18 +29,42 @@ export default function App() {
 function Logo() {
   return <h1>Far Away</h1>;
 }
-function Form() {
+
+function Form({ onAddItem }) {
+  const [description, setDescription] = useState("");
+  const [quantity, setQuantity] = useState(1);
+  function handleSubmit(e) {
+    e.preventDefault();
+    if (!description) return;
+    const newItem = {
+      id: new Date(),
+      count: quantity,
+      itemName: description,
+      packed: false,
+    };
+
+    onAddItem(newItem);
+  }
   return (
     <div className="add-form">
       <h3>What do you need for your 🧳 trip?</h3>
-      <select>
-        {Array.from({ length: 12 }, (_, i) => (
-          <option key={i} value={i + 1}>
-            {i + 1}
-          </option>
-        ))}
-      </select>
-      <input></input>
+      <form onSubmit={handleSubmit}>
+        <select
+          value={quantity}
+          onChange={(e) => setQuantity(Number(e.target.value))}
+        >
+          {Array.from({ length: 12 }, (_, i) => (
+            <option key={i} value={i + 1}>
+              {i + 1}
+            </option>
+          ))}
+        </select>
+        <input
+          placeholder="what do you need?"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        ></input>
+      </form>
     </div>
   );
 }
@@ -76,7 +103,7 @@ function Item({ item, count, packed, onToggleItem, id }) {
         checked={packed}
         onChange={() => onToggleItem(id)}
       />
-      <span className="line-through">
+      <span className={packed === true ? "line-through" : ""}>
         {count} -{item}
       </span>
       <button>❌</button>
