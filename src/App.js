@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./App.css";
+
 export default function App() {
   const [data, setData] = useState([
     { id: 1, count: 1, itemName: "passport", packed: false },
@@ -25,11 +26,17 @@ export default function App() {
 function Logo() {
   return <h1>Far Away</h1>;
 }
-
 function Form() {
   return (
     <div className="add-form">
       <h3>What do you need for your 🧳 trip?</h3>
+      <select>
+        {Array.from({ length: 12 }, (_, i) => (
+          <option key={i} value={i + 1}>
+            {i + 1}
+          </option>
+        ))}
+      </select>
       <input></input>
     </div>
   );
